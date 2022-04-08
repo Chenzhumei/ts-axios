@@ -9,5 +9,5 @@ export function isDate(val: any): val is Date {
 // }
 
 export function isPlainObject(val: any): val is Object {
-   return toString.call(val) === '[object Object]';
+    return toString.call(val) === '[object Object]'
 }
