@@ -1,5 +1,17 @@
 import { isPlainObject } from "./util";
 
+function normalizeHeaderName(headers: any, normalizedName: string): void {
+  if (!headers) {
+    return
+  }
+  Object.keys(headers).forEach(name => {
+      if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
+          headers[normalizedName] = headers[name];
+          delete headers[name];
+      }
+  })
+}
+
 export function processHeaders(headers: any, data: any): any {
    normalizeHeaderName(headers, 'Content-Type');
    if (isPlainObject(data)) {
@@ -10,14 +22,23 @@ export function processHeaders(headers: any, data: any): any {
    return headers;
 }
 
-function normalizeHeaderName(headers: any, normalizedName: string): void {
-    if (!headers) {
-      return
+export function parseHeaders(headers: string): any {
+  let parsed = Object.create(null);
+  if (!headers) {
+     return parsed;
+  }
+
+  headers.split('\r\n').forEach(line => {
+    let [key, val] = line.split(':');
+    key = key.trim().toLowerCase();
+    if (!key) {
+       return;
     }
-    Object.keys(headers).forEach(name => {
-        if (name !== normalizedName && name.toUpperCase() === normalizedName.toUpperCase()) {
-            headers[normalizedName] = headers[name];
-            delete headers[name];
-        }
-    })
+    if (val) {
+       val = val.trim();
+    }
+    parsed[key] = val;
+  })
+  return parsed;
 }
+

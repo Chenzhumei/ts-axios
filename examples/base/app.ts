@@ -151,6 +151,7 @@ axios({
 axios({
   method: 'post',
   url: '/base/post',
+  responseType: 'json',
   data: {
     a: 1,
     b: 2
